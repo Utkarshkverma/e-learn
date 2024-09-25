@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: video-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27018
+      database: videoDB
+server:
+  port: 7072

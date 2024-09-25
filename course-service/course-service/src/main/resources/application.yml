@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: course-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/courseDB
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # or create, create-drop, validate as needed
+    show-sql: true
+
+server:
+  port: 7071
