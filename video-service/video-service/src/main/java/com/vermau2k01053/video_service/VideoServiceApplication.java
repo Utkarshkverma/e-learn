@@ -22,8 +22,7 @@ public class VideoServiceApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Video video = Video.builder()
-				.id(UUID.randomUUID().toString()) // Generate a random UUID for the ID
+		Video video = Video.builder() // Generate a random UUID for the ID
 				.title("Random Video Title")
 				.description("This is a randomly generated video description.")
 				.build();

@@ -26,7 +26,7 @@ services:
       - mysql-db
 
   postgres-db:
-    image: postgres:latest
+    image: postgres:16
     container_name: postgres_container
     environment:
       POSTGRES_USER: user
