@@ -17,6 +17,6 @@ public class Video {
     private String description;
     private String filePath;
     private String contentType;
-
+    private String courseId;
 
 }

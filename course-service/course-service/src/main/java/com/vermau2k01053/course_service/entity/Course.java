@@ -26,4 +26,5 @@ public class Course {
     private Date createdDate;
     private String banner;
     private String bannerContentType;
+    private String categoryId;
 }

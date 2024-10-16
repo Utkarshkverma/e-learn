@@ -1,4 +1,5 @@
-package com.vermau2k01053.course_service.dto;
+package com.vermau2k01053.category_service.dto;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,6 +31,4 @@ public class CourseDto {
     private double discount;
     private Date createdDate;
     private String banner;
-    private String categoryId;
-    private CategoryDto category;
 }

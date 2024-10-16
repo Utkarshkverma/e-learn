@@ -17,3 +17,7 @@ spring:
 
 server:
   port: 7071
+
+category-service:
+  base:
+    url: "http://localhost:7070/api/category/"

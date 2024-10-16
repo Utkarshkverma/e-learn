@@ -1,17 +1,11 @@
-package com.vermau2k01053.course_service.dto;
+package com.vermau2k01053.video_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseDto {
+
     private String id;
     private String title;
     private String shortDesc;
@@ -31,5 +26,4 @@ public class CourseDto {
     private Date createdDate;
     private String banner;
     private String categoryId;
-    private CategoryDto category;
 }

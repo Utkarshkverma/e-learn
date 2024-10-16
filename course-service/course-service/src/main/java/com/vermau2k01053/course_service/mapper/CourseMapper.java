@@ -15,8 +15,7 @@ public class CourseMapper {
         course.setPrice(dto.getPrice());
         course.setLive(dto.isLive());
         course.setDiscount(dto.getDiscount());
-
-
+        course.setCategoryId(dto.getCategoryId());
         return course;
     }
 
@@ -32,6 +31,7 @@ public class CourseMapper {
         courseDto.setDiscount(course.getDiscount());
         courseDto.setBanner(course.getBanner());
         courseDto.setCreatedDate(course.getCreatedDate());
+        courseDto.setCategoryId(course.getCategoryId());
 
         return courseDto;
     }

@@ -1,6 +1,7 @@
 package com.vermau2k01053.course_service.service.impl;
 
 import com.vermau2k01053.course_service.constant.AppConstant;
+import com.vermau2k01053.course_service.dto.CategoryDto;
 import com.vermau2k01053.course_service.dto.CourseDto;
 import com.vermau2k01053.course_service.dto.ResourceContentTypeDto;
 import com.vermau2k01053.course_service.entity.Course;
@@ -10,17 +11,20 @@ import com.vermau2k01053.course_service.repository.CourseRepository;
 import com.vermau2k01053.course_service.service.ICourseService;
 import com.vermau2k01053.course_service.service.IFileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +37,10 @@ public class CourseServiceImpl implements ICourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
     private final IFileService fileService;
+    private final RestTemplate restTemplate;
 
+    @Value("${category-service.base.url}")
+    private String categoryServiceBaseUrl;
 
     @Override
     public CourseDto createCourse(CourseDto courseDto) {
@@ -65,19 +72,42 @@ public class CourseServiceImpl implements ICourseService {
                 .findById(courseId)
                 .orElseThrow(()-> new CourseNotFoundException(courseId));
 
-        return courseMapper.entityToDto(course);
+        String categoryServiceUrl = categoryServiceBaseUrl+course.getCategoryId();
+        CategoryDto forObject = restTemplate.getForObject(categoryServiceUrl, CategoryDto.class);
+
+        CourseDto courseDto = courseMapper.entityToDto(course);
+        courseDto.setCategory(forObject);
+        return courseDto;
 
     }
 
     @Override
     public Page<CourseDto> getAllCourses(Pageable pageable) {
         Page<Course> courses = courseRepository.findAll(pageable);
-        List<CourseDto> dtos = courses.getContent()
-                .stream()
-                .map(courseMapper::entityToDto)
-                .toList();
+        List<CourseDto> dtos = new ArrayList<>();
+
+        for (Course course : courses.getContent()) {
+            CourseDto courseDto = courseMapper.entityToDto(course);
+            String categoryId = course.getCategoryId();
+
+            if (categoryId != null && !categoryId.isEmpty()) {
+                String categoryServiceUrl = categoryServiceBaseUrl + categoryId;
+                try {
+                    CategoryDto category = restTemplate.getForObject(categoryServiceUrl, CategoryDto.class);
+                    courseDto.setCategory(category);
+                } catch (Exception e) {
+                    courseDto.setCategory(null);
+                }
+            } else {
+                courseDto.setCategory(null);
+            }
+
+            dtos.add(courseDto);
+        }
+
         return new PageImpl<>(dtos, pageable, courses.getTotalElements());
     }
+
 
     @Override
     public void deleteCourse(String id) {

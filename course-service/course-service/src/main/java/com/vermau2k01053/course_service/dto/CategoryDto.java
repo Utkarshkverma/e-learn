@@ -1,4 +1,4 @@
-package com.vermau2k01053.category_service.dto;
+package com.vermau2k01053.course_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotEmpty;
@@ -27,5 +27,4 @@ public class CategoryDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy hh:mm:ss a",timezone = "IST")
     private Date addedDate;
-
 }

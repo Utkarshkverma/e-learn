@@ -1,6 +1,7 @@
 package com.vermau2k01053.course_service.controller;
 
 import com.vermau2k01053.course_service.dto.CourseDto;
+import com.vermau2k01053.course_service.dto.CustomMessageDto;
 import com.vermau2k01053.course_service.service.ICourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -56,6 +59,25 @@ public class CourseController {
         return ResponseEntity.ok(courseService.searchCourses(keyword));
     }
 
+    @PostMapping("/{courseId}/banners")
+    public ResponseEntity<?> uploadBanner(@PathVariable String courseId, @RequestParam("banner") MultipartFile banner) throws IOException {
+        String contentType = banner.getContentType();
+
+        if (contentType == null) {
+            contentType = "image/png";
+        } else if (contentType.equalsIgnoreCase("image/png") || contentType.equalsIgnoreCase("image/jpeg")) {
+        } else {
+            CustomMessageDto customMessage = new CustomMessageDto();
+            customMessage.setSuccess(false);
+            customMessage.setMessage("Invalid file");
+            customMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customMessage);
+        }
+        CourseDto courseDto = courseService.saveBanner(banner, courseId);
+        return ResponseEntity.ok(courseDto);
+
+    }
 
 
 
