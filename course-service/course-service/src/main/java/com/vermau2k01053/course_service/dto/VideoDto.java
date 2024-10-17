@@ -1,4 +1,4 @@
-package com.vermau2k01053.video_service.dto;
+package com.vermau2k01053.course_service.dto;
 
 import lombok.Data;
 

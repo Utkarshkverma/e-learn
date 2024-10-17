@@ -32,4 +32,5 @@ public class CourseDto {
     private String banner;
     private String categoryId;
     private CategoryDto category;
+    private List<VideoDto> videos;
 }

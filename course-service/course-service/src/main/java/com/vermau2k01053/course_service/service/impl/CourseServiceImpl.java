@@ -4,6 +4,7 @@ import com.vermau2k01053.course_service.constant.AppConstant;
 import com.vermau2k01053.course_service.dto.CategoryDto;
 import com.vermau2k01053.course_service.dto.CourseDto;
 import com.vermau2k01053.course_service.dto.ResourceContentTypeDto;
+import com.vermau2k01053.course_service.dto.VideoDto;
 import com.vermau2k01053.course_service.entity.Course;
 import com.vermau2k01053.course_service.exception.CourseNotFoundException;
 import com.vermau2k01053.course_service.mapper.CourseMapper;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -38,9 +40,15 @@ public class CourseServiceImpl implements ICourseService {
     private final CourseMapper courseMapper;
     private final IFileService fileService;
     private final RestTemplate restTemplate;
+    private final WebClient webClient;
 
     @Value("${category-service.base.url}")
     private String categoryServiceBaseUrl;
+
+    @Value("${video-service.base.url}")
+    private String videoServiceBaseUrl;
+
+
 
     @Override
     public CourseDto createCourse(CourseDto courseDto) {
@@ -77,6 +85,9 @@ public class CourseServiceImpl implements ICourseService {
 
         CourseDto courseDto = courseMapper.entityToDto(course);
         courseDto.setCategory(forObject);
+
+        courseDto.setVideos(getVideosOfTheCourse(courseDto.getId()));
+
         return courseDto;
 
     }
@@ -101,7 +112,7 @@ public class CourseServiceImpl implements ICourseService {
             } else {
                 courseDto.setCategory(null);
             }
-
+            courseDto.setVideos(getVideosOfTheCourse(courseDto.getId()));
             dtos.add(courseDto);
         }
 
@@ -149,6 +160,16 @@ public class CourseServiceImpl implements ICourseService {
         resourceContentType.setContentType(course.getBannerContentType());
         return resourceContentType;
 
+    }
+
+    private List<VideoDto> getVideosOfTheCourse(String courseId)
+    {
+        return webClient.get()
+                .uri(videoServiceBaseUrl + "course/{id}", courseId)
+                .retrieve()
+                .bodyToFlux(VideoDto.class)
+                .collect(Collectors.toList())
+                .block();
     }
 
 

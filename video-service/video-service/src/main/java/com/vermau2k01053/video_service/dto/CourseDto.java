@@ -25,5 +25,5 @@ public class CourseDto {
     private double discount;
     private Date createdDate;
     private String banner;
-    private String categoryId;
+
 }

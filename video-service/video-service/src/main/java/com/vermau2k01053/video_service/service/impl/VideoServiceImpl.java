@@ -5,6 +5,7 @@ import com.vermau2k01053.video_service.dto.VideoDto;
 import com.vermau2k01053.video_service.exception.VideoNotFoundException;
 import com.vermau2k01053.video_service.mapper.VideoMapper;
 import com.vermau2k01053.video_service.repository.VideoRepository;
+import com.vermau2k01053.video_service.service.ICourseService;
 import com.vermau2k01053.video_service.service.IVideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ public class VideoServiceImpl implements IVideoService {
 
     private final VideoRepository videoRepository;
     private final VideoMapper videoMapper;
+    private final ICourseService courseService;
 
 
     @Override
@@ -50,7 +52,9 @@ public class VideoServiceImpl implements IVideoService {
         Video video = videoRepository
                 .findById(videoId)
                 .orElseThrow(()-> new VideoNotFoundException("Video not found with id: " + videoId));
-        return videoMapper.entityToDto(video);
+        VideoDto videoDto = videoMapper.entityToDto(video);
+        videoDto.setCourse(courseService.getCourseById(video.getCourseId()));
+        return videoDto;
     }
 
     @Override
@@ -90,4 +94,6 @@ public class VideoServiceImpl implements IVideoService {
                 .stream()
                 .map(videoMapper::entityToDto).collect(Collectors.toList());
     }
+
+
 }
