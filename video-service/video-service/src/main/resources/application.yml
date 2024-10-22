@@ -7,4 +7,30 @@ spring:
       port: 27018
       database: videoDB
 server:
-  port: 7072
+  port: ${PORT:7078}
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: " http://localhost:8761/eureka/"
+    refresh:
+      enable: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "Video Service"
+    description : "This is a video service"
+    version : "1.0"
+    author : "Utkarsh Kumar Verma"
+
+

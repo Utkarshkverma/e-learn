@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: "discovery-server"
+
+# Configuration for not to register with itself
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+server:
+  port: 8761

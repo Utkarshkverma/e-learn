@@ -40,7 +40,7 @@ public class CourseServiceImpl implements ICourseService {
     private final CourseMapper courseMapper;
     private final IFileService fileService;
     private final RestTemplate restTemplate;
-    private final WebClient webClient;
+    private final WebClient.Builder webClient;
 
     @Value("${category-service.base.url}")
     private String categoryServiceBaseUrl;
@@ -112,7 +112,7 @@ public class CourseServiceImpl implements ICourseService {
             } else {
                 courseDto.setCategory(null);
             }
-            courseDto.setVideos(getVideosOfTheCourse(courseDto.getId()));
+            //courseDto.setVideos(getVideosOfTheCourse(courseDto.getId()));
             dtos.add(courseDto);
         }
 
@@ -164,7 +164,7 @@ public class CourseServiceImpl implements ICourseService {
 
     private List<VideoDto> getVideosOfTheCourse(String courseId)
     {
-        return webClient.get()
+        return webClient.build().get()
                 .uri(videoServiceBaseUrl + "course/{id}", courseId)
                 .retrieve()
                 .bodyToFlux(VideoDto.class)
