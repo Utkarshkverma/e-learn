@@ -13,13 +13,7 @@ spring:
     properties:
       hibernate:
         dialect: "org.hibernate.dialect.MySQL8Dialect"
-  cloud:
-    discovery:
-      client:
-        simple:
-          instances:
-            category-service:
-              - uri: http://172.31.96.1:7010
+
 server:
   port: ${PORT:7097}
 
